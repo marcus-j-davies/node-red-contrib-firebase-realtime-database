@@ -9,7 +9,8 @@
 			},
 			json: { type: "password" },
 			password: { type: "password", validate: RED.validators.regex(/\S/) },
-			secret: { type: "password" },
+			token: { type: "password" },
+			uid: { type: "password" },
 			url: {
 				type: "text",
 				validate: RED.validators.regex(
@@ -42,15 +43,8 @@
 				$(".form-row-url").show();
 				$(".form-row-json").hide();
 				$(".form-row-email").hide();
-				$(".form-row-secret").hide();
-				break;
-
-			case "privateKey":
-				$(".form-row-apiKey").hide();
-				$(".form-row-url").show();
-				$(".form-row-json").show();
-				$(".form-row-email").hide();
-				$(".form-row-secret").hide();
+				$(".form-row-token").hide();
+				$(".form-row-uid").hide();
 				break;
 
 			case "email":
@@ -58,15 +52,35 @@
 				$(".form-row-url").show();
 				$(".form-row-json").hide();
 				$(".form-row-email").show();
-				$(".form-row-secret").hide();
+				$(".form-row-token").hide();
+				$(".form-row-uid").hide();
 				break;
 
-			case "customToken":
-				$(".form-row-apiKey").show();
+			case "privateKey":
+				$(".form-row-apiKey").hide();
+				$(".form-row-url").show();
+				$(".form-row-json").show();
+				$(".form-row-email").hide();
+				$(".form-row-token").hide();
+				$(".form-row-uid").hide();
+				break;
+
+			case "JSONWebToken":
+				$(".form-row-apiKey").hide();
 				$(".form-row-url").show();
 				$(".form-row-json").hide();
 				$(".form-row-email").hide();
-				$(".form-row-secret").show();
+				$(".form-row-token").show();
+				$(".form-row-uid").hide();
+				break;
+
+			case "customToken":
+				$(".form-row-apiKey").hide();
+				$(".form-row-url").show();
+				$(".form-row-json").show();
+				$(".form-row-email").hide();
+				$(".form-row-token").hide();
+				$(".form-row-uid").show();
 				break;
 		}
 	}
@@ -85,8 +99,9 @@
 		<select id="node-config-input-authType" style="width: 70%;">
 			<option value="anonymous">Anonymous</option>
 			<option value="email">Email</option>
-			<option value="privateKey">JSON Private Key</option>
-			<!--<option value="customToken">Custom Token Generated with Secret</option>-->
+			<option value="privateKey">Private Key (Admin SDK)</option>
+			<option value="JSONWebToken">JSON Web Token</option>
+			<option value="customToken">Custom Token Generated with Private Key</option>
 		</select>
 	</div>
 
@@ -113,16 +128,22 @@
 		<input type="text" id="node-config-input-url" style="width:70%" placeholder="Database URL" />
 	</div>
 
-	<!-- JSON Private Key -->
+	<!-- Private Key -->
 	<div class="form-row form-row-json">
-		<label for="node-config-input-json"><i class="fa fa-file-code-o"></i> JSON Content</label>
-		<input type="text" id="node-config-input-json" style="width:70%" placeholder="Paste JSON file content" />
+		<label for="node-config-input-json"><i class="fa fa-file-code-o"></i> JSON</label>
+		<input type="password" id="node-config-input-json" style="width:70%" placeholder="Paste JSON file content" />
 	</div>
 
-	<!-- Custom login with new token generated from Firebase-->
-	<div class="form-row form-row-secret">
-		<label for="node-config-input-secret"><i class="fa fa-user-secret"></i> Secret</label>
-		<input type="password" id="node-config-input-secret" style="width:70%" placeholder="Firebase Secret" />
+	<!-- JSON Web Token -->
+	<div class="form-row form-row-token">
+		<label for="node-config-input-token"><i class="fa fa-user-secret"></i> Token</label>
+		<input type="password" id="node-config-input-token" style="width:70%" placeholder="Firebase Token" />
+	</div>
+
+	<!-- Custom Token Generated -->
+	<div class="form-row form-row-uid">
+		<label for="node-config-input-uid"><i class="fa fa-user-secret"></i> UID</label>
+		<input type="password" id="node-config-input-uid" style="width:70%" placeholder="Firebase Unique Identifiant" />
 	</div>
 
 	<!-- Email login -->

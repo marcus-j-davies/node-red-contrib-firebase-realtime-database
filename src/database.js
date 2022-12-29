@@ -30,7 +30,8 @@ module.exports = function (RED) {
 			email: { type: "text" },
 			json: { type: "password" },
 			password: { type: "password" },
-			secret: { type: "password" },
+			token: { type: "password" },
+			uid: { type: "password" },
 			url: { type: "text" },
 		},
 	});

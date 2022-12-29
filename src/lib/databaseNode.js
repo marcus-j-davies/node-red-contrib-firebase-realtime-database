@@ -83,6 +83,12 @@ async function logIn(self) {
 		case "privateKey":
 			logInWithPrivateKey(self);
 			break;
+		case "JSONWebToken":
+			await logInWithToken(self);
+			break;
+		case "customToken":
+			await logInWithCustomToken(self);
+			break;
 	}
 }
 
@@ -91,6 +97,43 @@ async function logInAnonymously(self) {
 
 	initApp(self);
 	await signInAnonymously(self.auth);
+}
+
+// Should work but this SHITTTTT don't!
+async function logInWithCustomToken(self) {
+	const { signInWithCustomToken } = require("firebase/auth");
+	const { getAuth } = require("firebase-admin/auth");
+
+	initAppWithSDK(self);
+
+	const claims = {
+		admin: self.config.admin || false,
+		debug: self.config.debug || false,
+		...(self.config.jwtClaims || {}),
+	};
+
+	const notAllowed = [
+		"alg",
+		"acr",
+		"amr",
+		"at_hash",
+		"aud",
+		"auth_time",
+		"azp,cnf",
+		"c_hash,exp",
+		"firebase,iat",
+		"iss",
+		"jti",
+		"nbf",
+		"nonce",
+		"sub",
+	];
+
+	if (Object.keys(claims).some((key) => notAllowed.includes(key))) throw new Error("Oh Sh*t...");
+
+	const token = await getAuth(self.app).createCustomToken(self.credentials.uid, claims);
+
+	await signInWithCustomToken(self.app, token);
 }
 
 async function logInWithEmail(self) {
@@ -121,6 +164,13 @@ async function logInWithEmail(self) {
 
 function logInWithPrivateKey(self) {
 	initAppWithSDK(self);
+}
+
+async function logInWithToken(self) {
+	const { signInWithCustomToken } = require("firebase/auth");
+
+	initApp(self);
+	await signInWithCustomToken(self.auth, self.credentials.token);
 }
 
 async function logOut(self) {
